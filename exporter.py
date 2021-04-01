@@ -12,6 +12,14 @@ class CustomCollector(object):
         value, none = value.split(",)]")
         return value
 
+    def str_value(self,value):
+        value = str(value)
+        none, value = value.split("('")
+        value, none = value.split("',)")
+        value = value.replace("-","_")
+        return value
+
+
     def collect(self):
         self.configure()
         postgres = Postgres(self.db_name,self.db_user,
@@ -26,14 +34,23 @@ class CustomCollector(object):
             print("The metric type is: {0}.".format(metric_type))
             print(type(metric_type))
             if metric_type == 'gauge':
-                stat = GaugeMetricFamily(metric, metric, labels=[metric])
-                result = str(postgres.read_query(metric_query))
+                result = postgres.read_query(metric_query)
+                print("result: ",result)
                 if metric_datatype == "int":
-                    result = self.int_value(result)
+                    stat = GaugeMetricFamily(metric, metric, labels=[metric])
+                    result = self.int_value(str(result))
                     stat.add_metric('', result)
+                    yield stat
                 if metric_datatype == "str":
-                    stat.add_metric(result, '1')
-                yield stat
+                    for item in result:
+                        #print("item:",item)
+                        item = self.str_value(item)
+                        print(item)
+                        #print("item:", item)
+                        stat = GaugeMetricFamily('backup_failed', 'Help?', labels=['job_name={0}'.format(item)])
+                        stat.add_metric('', '1')
+                        yield stat
+
             if metric_type == "counter":
                 CounterMetricFamily(metric, metric, labels=[metric])
                 result = str(postgres.read_query(metric_query))
