@@ -1,0 +1,11 @@
+version: "3"
+services:
+  bareos-exporter:
+    image: bareos-exporter
+    ports:
+      - "9118:9118"
+    volumes:
+      - "/Projects/Prometheus/exporters/bareos-exporter-pgsql/config.json:/app/config.json"
+    environment:
+      - CONFIG_PATH=/app/config.json
+    container_name: bareos-exporter

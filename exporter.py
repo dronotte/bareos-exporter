@@ -28,14 +28,9 @@ class CustomCollector(object):
             metric_type = self.metrics[metric]["type"]
             metric_query = self.metrics[metric]["query"]
             metric_datatype = self.metrics[metric]["datatype"]
-            print("metric_type == 'gauge'?")
-            print(metric_type == 'gauge')
             #print(metric_query)
-            print("The metric type is: {0}.".format(metric_type))
-            print(type(metric_type))
             if metric_type == 'gauge':
                 result = postgres.read_query(metric_query)
-                print("result: ",result)
                 if metric_datatype == "int":
                     stat = GaugeMetricFamily(metric, metric, labels=[metric])
                     result = self.int_value(str(result))
@@ -45,21 +40,29 @@ class CustomCollector(object):
                     for item in result:
                         #print("item:",item)
                         item = self.str_value(item)
-                        print(item)
+                        label = self.metrics[metric]["label"]
                         #print("item:", item)
-                        stat = GaugeMetricFamily('backup_failed', 'Help?', labels=['job_name={0}'.format(item)])
-                        stat.add_metric('', '1')
+                        stat = GaugeMetricFamily('backup_failed', 'Failed job backup metric', labels = [label])
+                        stat.add_metric([item], '1')
                         yield stat
 
             if metric_type == "counter":
                 CounterMetricFamily(metric, metric, labels=[metric])
-                result = str(postgres.read_query(metric_query))
-                print(result)
-                stat.add_metric(result, '')
-                yield stat
-            #else:
-            #    print("Cannot collect metric with metric_type={0}".format(metric_type))
-            #    sys.exit()
+                result = postgres.read_query(metric_query)
+                if metric_datatype == "int":
+                    stat = GaugeMetricFamily(metric, metric, labels=[metric])
+                    result = self.int_value(str(result))
+                    stat.add_metric('', result)
+                    yield stat
+                if metric_datatype == "str":
+                    for item in result:
+                        #print("item:",item)
+                        item = self.str_value(item)
+                        label = self.metrics[metric]["label"]
+                        #print("item:", item)
+                        stat = GaugeMetricFamily('backup_failed', 'Failed job backup metric', labels = [label])
+                        stat.add_metric([item], '1')
+                        yield stat
 
 
     def configure(self):
@@ -82,29 +85,9 @@ class CustomCollector(object):
         self.db_port = int(config["connection"]["db_port"])
         self.metrics = config["metrics"]
 
-        #print(type(self.metrics))
-        #print(self.metrics)
-        #self.collect()
-
-#collector = CustomCollector()
-#collector.configure()
-#print(collector.metrics)
 
 if __name__ == "__main__":
     REGISTRY.register(CustomCollector())
     start_http_server(9118)
     while True:
         time.sleep(1)
-
-
-
-
-
-'''
-postgres = Postgres(db_name,db_user,db_password,db_host,db_port)
-
-
-result = postgres.read_query("select job,name,starttime from public.Job where JobErrors != 0 and JobStatus != 'A' and Name != 'RestoreFiles' and StartTime >= (now() - interval '1 day');")
-for item in result:
-    print(item)
-'''

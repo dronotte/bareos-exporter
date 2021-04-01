@@ -12,13 +12,15 @@
         "datatype": "int",
         "help": "The number of failed jobs",
         "values": "failed_jobs",
+        "labels": "",
         "query": "select count(JobId) as failed_jobs from public.Job where JobErrors != 0 and JobStatus != 'A' and Name != 'RestoreFiles' and StartTime >= (now() - interval '1 day');"
       },
       "failed_names": {
         "type": "gauge",
         "datatype": "str",
-        "help": "The names of failed jobs",
-        "values": "failed_names",
+        "help": "The names of failed job",
+        "values": "failed_job",
+        "label": "jobs",
         "query": "select name from public.Job where JobErrors != 0 and JobStatus != 'A' and Name != 'RestoreFiles' and StartTime >= (now() - interval '1 day');"
       }
    }
