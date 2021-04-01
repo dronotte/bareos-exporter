@@ -1,0 +1,25 @@
+{
+   "connection": {
+       "db_name": "bareos",
+       "db_host": "192.168.100.104",
+       "db_password": "aY78kgvoftQ2sk",
+       "db_user": "exporter",
+       "db_port": 5432
+   },
+   "metrics": {
+     "failed_number": {
+        "type": "gauge",
+        "datatype": "int",
+        "help": "The number of failed jobs",
+        "values": "failed_jobs",
+        "query": "select count(JobId) as failed_jobs from public.Job where JobErrors != 0 and JobStatus != 'A' and Name != 'RestoreFiles' and StartTime >= (now() - interval '1 day');"
+      },
+      "failed_names": {
+        "type": "gauge",
+        "datatype": "str",
+        "help": "The names of failed jobs",
+        "values": "failed_names",
+        "query": "select name from public.Job where JobErrors != 0 and JobStatus != 'A' and Name != 'RestoreFiles' and StartTime >= (now() - interval '1 day');"
+      }
+   }
+}
