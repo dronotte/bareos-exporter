@@ -41,8 +41,10 @@ class CustomCollector(object):
                         #print("item:",item)
                         item = self.str_value(item)
                         label = self.metrics[metric]["label"]
+                        values = self.metrics[metric]["values"]
+                        help = self.metrics[metric]["help"]
                         #print("item:", item)
-                        stat = GaugeMetricFamily('backup_failed', 'Failed job backup metric', labels = [label])
+                        stat = GaugeMetricFamily(values, help, labels = [label])
                         stat.add_metric([item], '1')
                         yield stat
 
