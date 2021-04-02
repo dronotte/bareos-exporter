@@ -47,6 +47,8 @@ docker-compose up -d
 
 Here we describe the parameters for connecting to the Bareos database.
 <br>
+db_type can be postgres or mysql
+<br>
 <br>
 We also describe the metrics that we will collect from Bareos. The int data type is normal metrics. The str data type is required to read failed or completed jobs with job titles.
 <br> <br>
