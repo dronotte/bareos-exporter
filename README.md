@@ -37,13 +37,13 @@ We also describe the metrics that we will collect from Bareos. The int data type
 <br> <br>
 The output of the second metric in the example in this config will be like this:
 ```
-# HELP backup_failed Failed job backup metric
-# TYPE backup_failed gauge
-backup_failed{jobs="backup_bareos_fd"} 1.0
-# HELP backup_failed Failed job backup metric
-# TYPE backup_failed gauge
-backup_failed{jobs="backup_nginx"} 1.0
-# HELP backup_failed Failed job backup metric
-# TYPE backup_failed gauge
-backup_failed{jobs="backup_web_app"} 1.0
+# HELP failed_job The names of failed jobs
+# TYPE failed_job gauge
+failed_job{job="backup_bareos_fd"} 1.0
+# HELP failed_job The names of failed jobs
+# TYPE failed_job gauge
+failed_job{jobs="backup_nginx"} 1.0
+# HELP failed_job The names of failed jobs
+# TYPE failed_job gauge
+failed_job{jobs="backup_web_app"} 1.0
 ```
