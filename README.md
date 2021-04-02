@@ -1,4 +1,19 @@
-Config example:
+# Usage:
+<br> <br>
+## build:
+```
+docker build -t bareos-exporter .
+```
+## then:
+### docker run:
+```
+docker run -d -p 9118:9118 -v /opt/bareos-exporter/config.json:/app/config.json -e CONFIG_PATH=/app/config.json --name bareos-exporter bareos-exporter
+```
+### Or docker-compose:
+```
+docker-compose up -d
+```
+## Config example:
 ```
 {
    "connection": {
