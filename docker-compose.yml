@@ -1,11 +1,11 @@
 version: "3"
 services:
   bareos-exporter:
-    image: bareos-exporter:0.6
+    image: bareos-exporter:1.0
     ports:
       - "9118:9118"
     volumes:
-      - "/opt/bareos-exporter/config.json:/app/config.json"
+      - "/opt/bareos-exporter:/app/config"
     environment:
-      - CONFIG_PATH=/app/config.json
+      - CONFIG_PATH=/app/config/config.json
     container_name: bareos-exporter
