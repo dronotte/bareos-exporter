@@ -1,8 +1,4 @@
-
-
-
-
-Пример конфига:
+Config example:
 ```
 {
    "connection": {
@@ -33,11 +29,13 @@
    }
 }
 ```
-Здесь мы описываем параметры подключения к базе данных Bareos'а
+
+Here we describe the parameters for connecting to the Bareos database.
 <br>
 <br>
-Также описываем метрики, которые будем собирать с Bareos'а. Тип данных int - обычные метрики. Тип данных str необходим для считывания невыполненных или выполненных работ с названиями. <br> <br>
-Вывод у второй метрики в этом конфиге будет таким:
+We also describe the metrics that we will collect from Bareos. The int data type is normal metrics. The str data type is required to read failed or completed jobs with job titles.
+<br> <br>
+The output of the second metric in the example in this config will be like this:
 ```
 # HELP backup_failed Failed job backup metric
 # TYPE backup_failed gauge

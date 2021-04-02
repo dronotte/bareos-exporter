@@ -42,7 +42,7 @@ class DBConnector():
         try:
             cursor = self.connection.cursor()
         except:
-            print('Проверь подключение (доступ) к бд')
+            print('Check connection to db')
             return
         result = None
         try:
