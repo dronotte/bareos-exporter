@@ -27,11 +27,11 @@ class CustomCollector(object):
             metric_type = self.metrics[metric]["type"]
             metric_query = self.metrics[metric]["query"]
             metric_datatype = self.metrics[metric]["datatype"]
+            label = self.metrics[metric]["label"]
+            values = self.metrics[metric]["values"]
+            help = self.metrics[metric]["help"]
+            result = con.read_query(metric_query)
             if metric_type == 'gauge':
-                label = self.metrics[metric]["label"]
-                values = self.metrics[metric]["values"]
-                help = self.metrics[metric]["help"]
-                result = con.read_query(metric_query)
                 if metric_datatype == "int":
                     stat = GaugeMetricFamily(values, help, labels = [label])
                     result = self.int_value(str(result))
@@ -45,12 +45,7 @@ class CustomCollector(object):
                         stat.add_metric([item], '1')
                         print(values,item)
                         yield stat
-
             if metric_type == "counter":
-                label = self.metrics[metric]["label"]
-                values = self.metrics[metric]["values"]
-                help = self.metrics[metric]["help"]
-                result = con.read_query(metric_query)
                 if metric_datatype == "int":
                     stat = CounterMetricFamily(values, help, labels = [label])
                     result = self.int_value(str(result))
