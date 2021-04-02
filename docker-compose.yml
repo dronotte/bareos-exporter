@@ -1,7 +1,7 @@
 version: "3"
 services:
   bareos-exporter:
-    image: bareos-exporter:0.3
+    image: bareos-exporter:0.6
     ports:
       - "9118:9118"
     volumes:

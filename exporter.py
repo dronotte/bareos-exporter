@@ -38,6 +38,7 @@ class CustomCollector(object):
                     stat = GaugeMetricFamily(values, help, labels = [label])
                     result = self.int_value(str(result))
                     stat.add_metric('', result)
+                    print(metric,result)
                     yield stat
                 if metric_datatype == "str":
                     for item in result:
@@ -46,6 +47,7 @@ class CustomCollector(object):
                         #print("item:", item)
                         stat = GaugeMetricFamily(values, help, labels = [label])
                         stat.add_metric([item], '1')
+                        print(values,item)
                         yield stat
 
             if metric_type == "counter":
@@ -54,7 +56,7 @@ class CustomCollector(object):
                 help = self.metrics[metric]["help"]
                 result = con.read_query(metric_query)
                 if metric_datatype == "int":
-                    stat = GaugeMetricFamily(values, help, labels = [label])
+                    stat = CounterMetricFamily(values, help, labels = [label])
                     result = self.int_value(str(result))
                     stat.add_metric('', result)
                     yield stat
@@ -63,16 +65,18 @@ class CustomCollector(object):
                         #print("item:",item)
                         item = self.str_value(item)
                         #print("item:", item)
-                        stat = GaugeMetricFamily(values, help, labels = [label])
+                        stat = CounterMetricFamily(values, help, labels = [label])
                         stat.add_metric([item], '1')
+                        print(values,item)
                         yield stat
-
 
     def configure(self):
         try:
-            #config_path = sys.args(1)
-            config_path = "config.json"
-        except:
+            print('config_path = ',sys.argv[1])
+            config_path = sys.argv[1]
+            #config_path = "templates/config.json"
+        except Exception as e:
+            print(e)
             print('Usage: exporter.py /path/to/config.json')
             sys.exit()
         cfg = open(config_path,'r')
