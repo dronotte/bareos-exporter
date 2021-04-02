@@ -30,9 +30,12 @@ class CustomCollector(object):
             metric_datatype = self.metrics[metric]["datatype"]
             #print(metric_query)
             if metric_type == 'gauge':
+                label = self.metrics[metric]["label"]
+                values = self.metrics[metric]["values"]
+                help = self.metrics[metric]["help"]
                 result = postgres.read_query(metric_query)
                 if metric_datatype == "int":
-                    stat = GaugeMetricFamily(metric, metric, labels=[metric])
+                    stat = GaugeMetricFamily(values, help, labels = [label])
                     result = self.int_value(str(result))
                     stat.add_metric('', result)
                     yield stat
@@ -40,19 +43,18 @@ class CustomCollector(object):
                     for item in result:
                         #print("item:",item)
                         item = self.str_value(item)
-                        label = self.metrics[metric]["label"]
-                        values = self.metrics[metric]["values"]
-                        help = self.metrics[metric]["help"]
                         #print("item:", item)
                         stat = GaugeMetricFamily(values, help, labels = [label])
                         stat.add_metric([item], '1')
                         yield stat
 
             if metric_type == "counter":
-                CounterMetricFamily(metric, metric, labels=[metric])
+                label = self.metrics[metric]["label"]
+                values = self.metrics[metric]["values"]
+                help = self.metrics[metric]["help"]
                 result = postgres.read_query(metric_query)
                 if metric_datatype == "int":
-                    stat = GaugeMetricFamily(metric, metric, labels=[metric])
+                    stat = GaugeMetricFamily(values, help, labels = [label])
                     result = self.int_value(str(result))
                     stat.add_metric('', result)
                     yield stat
@@ -60,9 +62,8 @@ class CustomCollector(object):
                     for item in result:
                         #print("item:",item)
                         item = self.str_value(item)
-                        label = self.metrics[metric]["label"]
                         #print("item:", item)
-                        stat = GaugeMetricFamily('backup_failed', 'Failed job backup metric', labels = [label])
+                        stat = GaugeMetricFamily(values, help, labels = [label])
                         stat.add_metric([item], '1')
                         yield stat
 
