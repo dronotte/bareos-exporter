@@ -42,8 +42,8 @@ The output of the second metric in the example in this config will be like this:
 failed_job{job="backup_bareos_fd"} 1.0
 # HELP failed_job The names of failed jobs
 # TYPE failed_job gauge
-failed_job{jobs="backup_nginx"} 1.0
+failed_job{job="backup_nginx"} 1.0
 # HELP failed_job The names of failed jobs
 # TYPE failed_job gauge
-failed_job{jobs="backup_web_app"} 1.0
+failed_job{job="backup_web_app"} 1.0
 ```
