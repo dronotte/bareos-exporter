@@ -1,4 +1,4 @@
-from conn.postgres import Postgres
+from conn.connector import DBConnector
 import json
 import sys, time
 from prometheus_client import start_http_server
@@ -22,8 +22,8 @@ class CustomCollector(object):
 
     def collect(self):
         self.configure()
-        postgres = Postgres(self.db_name,self.db_user,
-                self.db_password,self.db_host,self.db_port)
+        con = DBConnector(self.db_name,self.db_user,
+                self.db_password,self.db_host,self.db_port, self.db_type)
         for metric in self.metrics:
             metric_type = self.metrics[metric]["type"]
             metric_query = self.metrics[metric]["query"]
@@ -33,7 +33,7 @@ class CustomCollector(object):
                 label = self.metrics[metric]["label"]
                 values = self.metrics[metric]["values"]
                 help = self.metrics[metric]["help"]
-                result = postgres.read_query(metric_query)
+                result = con.read_query(metric_query)
                 if metric_datatype == "int":
                     stat = GaugeMetricFamily(values, help, labels = [label])
                     result = self.int_value(str(result))
@@ -52,7 +52,7 @@ class CustomCollector(object):
                 label = self.metrics[metric]["label"]
                 values = self.metrics[metric]["values"]
                 help = self.metrics[metric]["help"]
-                result = postgres.read_query(metric_query)
+                result = con.read_query(metric_query)
                 if metric_datatype == "int":
                     stat = GaugeMetricFamily(values, help, labels = [label])
                     result = self.int_value(str(result))
@@ -87,6 +87,7 @@ class CustomCollector(object):
         self.db_user = str(config["connection"]["db_user"])
         self.db_port = int(config["connection"]["db_port"])
         self.metrics = config["metrics"]
+        self.db_type = str(config["connection"]["db_type"])
 
 
 if __name__ == "__main__":
