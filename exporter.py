@@ -59,6 +59,7 @@ class CustomCollector(object):
                     stat = CounterMetricFamily(values, help, labels = [label])
                     result = self.int_value(str(result))
                     stat.add_metric('', result)
+                    print(metric,result)
                     yield stat
                 if metric_datatype == "str":
                     for item in result:
