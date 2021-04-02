@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from conn.connector import DBConnector
 import json
 import sys, time
@@ -20,7 +19,6 @@ class CustomCollector(object):
         value = value.replace("-","_")
         return value
 
-
     def collect(self):
         self.configure()
         con = DBConnector(self.db_name,self.db_user,
@@ -29,7 +27,6 @@ class CustomCollector(object):
             metric_type = self.metrics[metric]["type"]
             metric_query = self.metrics[metric]["query"]
             metric_datatype = self.metrics[metric]["datatype"]
-            #print(metric_query)
             if metric_type == 'gauge':
                 label = self.metrics[metric]["label"]
                 values = self.metrics[metric]["values"]
@@ -43,9 +40,7 @@ class CustomCollector(object):
                     yield stat
                 if metric_datatype == "str":
                     for item in result:
-                        #print("item:",item)
                         item = self.str_value(item)
-                        #print("item:", item)
                         stat = GaugeMetricFamily(values, help, labels = [label])
                         stat.add_metric([item], '1')
                         print(values,item)
@@ -64,9 +59,7 @@ class CustomCollector(object):
                     yield stat
                 if metric_datatype == "str":
                     for item in result:
-                        #print("item:",item)
                         item = self.str_value(item)
-                        #print("item:", item)
                         stat = CounterMetricFamily(values, help, labels = [label])
                         stat.add_metric([item], '1')
                         print(values,item)
@@ -76,7 +69,6 @@ class CustomCollector(object):
         try:
             print('config_path = ',sys.argv[1])
             config_path = sys.argv[1]
-            #config_path = "templates/config.json"
         except Exception as e:
             print(e)
             print('Usage: exporter.py /path/to/config.json')
@@ -101,36 +93,3 @@ if __name__ == "__main__":
     start_http_server(9118)
     while True:
         time.sleep(1)
-=======
-from conn.postgres import Postgres
-import yaml
-import sys
-
-db_name = "bareos"
-db_user = "exporter"
-db_password = "aY78kgvoftQ2sk"
-db_host = "192.168.100.104"
-db_port = "5432"
-
-try:
-    #config_path = sys.args(1)
-    config_path = "test.yaml"
-except:
-    print('Usage: exporter.py /path/to/config.yml')
-with open(config_path,'r') as stream:
-    config_loaded = yaml.safe_load(stream)
-print(config_loaded)
-
-
-
-
-
-'''
-postgres = Postgres(db_name,db_user,db_password,db_host,db_port)
-
-
-result = postgres.read_query("select job,name,starttime from public.Job where JobErrors != 0 and JobStatus != 'A' and Name != 'RestoreFiles' and StartTime >= (now() - interval '1 day');")
-for item in result:
-    print(item)
-'''
->>>>>>> Postgres connector added
